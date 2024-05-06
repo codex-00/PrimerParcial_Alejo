@@ -1,0 +1,63 @@
+package ar.com.unpaz.inicio;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) {
+        // Ruta del archivo de texto
+        String filePath = "ruta/del/archivo.txt";
+
+        // Crear e iniciar el hilo para leer el archivo
+        FileReadingThread fileReadingThread = new FileReadingThread(filePath);
+        fileReadingThread.start();
+
+        // Realizar otras operaciones en el hilo principal
+        for (int i = 0; i < 5; i++) {
+            System.out.println("Operación en el hilo principal: " + i);
+            // Simular una operación de cálculo simple
+            int resultado = i * 2;
+            System.out.println("Resultado: " + resultado);
+
+            // Pausa para simular una operación
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static class FileReadingThread extends Thread {
+        private String filePath;
+
+        public FileReadingThread(String filePath) {
+            this.filePath = filePath;
+        }
+
+        @Override
+        public void run() {
+            try {
+                File file = new File(filePath);
+                FileReader fileReader = new FileReader(file);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                String line;
+
+                // Leer el archivo línea por línea
+                while ((line = bufferedReader.readLine()) != null) {
+                    // Simular el procesamiento de cada línea
+                    System.out.println("Leyendo línea: " + line);
+
+                    // Pausa para simular un procesamiento
+                    Thread.sleep(1000);
+                }
+
+                bufferedReader.close();
+                fileReader.close();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
